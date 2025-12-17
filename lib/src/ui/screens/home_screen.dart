@@ -48,7 +48,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
+      backgroundColor: const Color(0xFFF8F9FF),
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
@@ -56,27 +56,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF2A2A2A),
+          color: Colors.white,
           border: Border(
-            top: BorderSide(color: Colors.grey.shade800, width: 0.5),
+            top: BorderSide(color: const Color(0xFFE8E8F0), width: 1),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: _onTabTapped,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: const Color(0xFF2A2A2A),
-          selectedItemColor: const Color(0xFFEF4444),
-          unselectedItemColor: Colors.grey[600],
+          backgroundColor: Colors.transparent,
+          selectedItemColor: const Color(0xFF667EEA),
+          unselectedItemColor: const Color(0xFF999999),
           showUnselectedLabels: true,
           elevation: 0,
           selectedLabelStyle: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
+            color: Color(0xFF667EEA),
           ),
           unselectedLabelStyle: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
+            color: Color(0xFF999999),
           ),
           items: const [
             BottomNavigationBarItem(

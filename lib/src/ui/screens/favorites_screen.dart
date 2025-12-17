@@ -14,7 +14,7 @@ class FavoritesScreen extends ConsumerWidget {
     final favoriteCount = favorites.length;
 
     return Scaffold(
-      backgroundColor: Colors.white, // Clean white background
+      backgroundColor: const Color(0xFFF8F9FF),
       body: SafeArea(
         child: Column(
           children: [
@@ -54,19 +54,35 @@ class FavoritesScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            "My Favorites",
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
+            "❤️ My Favorites",
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF1A1A1A),
+            ),
           ),
           if (count > 0)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.red,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                ),
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF667EEA).withOpacity(0.3),
+                    blurRadius: 8,
+                  ),
+                ],
               ),
               child: Text(
-                "$count", 
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+                "$count",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
             ),
         ],
@@ -89,9 +105,9 @@ class FavoritesScreen extends ConsumerWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -108,35 +124,53 @@ class FavoritesScreen extends ConsumerWidget {
                     child: Image.network(
                       meal.image ?? '',
                       width: double.infinity,
-                      height: 220, // Large height for full-width card
+                      height: 220,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => Container(
-                        height: 220, 
-                        color: Colors.grey[100],
-                        child: const Icon(Icons.fastfood, color: Colors.grey),
+                        height: 220,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF667EEA).withOpacity(0.1), Color(0xFF764BA2).withOpacity(0.1)],
+                          ),
+                        ),
+                        child: const Icon(Icons.fastfood, color: Color(0xFF667EEA), size: 50),
                       ),
                     ),
                   ),
                 ),
-                // Remove (Red Heart) button
+                // Remove button with gradient
                 Positioned(
                   top: 15,
                   right: 15,
                   child: GestureDetector(
                     onTap: () {
                       ref.read(favoritesProvider.notifier).remove(entity);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Removed from favorites'),
+                          backgroundColor: const Color(0xFF667EEA),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      );
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.red.withOpacity(0.5), width: 1),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 6,
+                          ),
+                        ],
                       ),
                       child: const Icon(
-                        Icons.favorite_rounded, 
-                        color: Colors.red, 
-                        size: 22
+                        Icons.favorite_rounded,
+                        color: Color(0xFF667EEA),
+                        size: 22,
                       ),
                     ),
                   ),
@@ -152,20 +186,29 @@ class FavoritesScreen extends ConsumerWidget {
                   Text(
                     meal.name ?? 'Unnamed',
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold, 
+                      fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Colors.black
+                      color: Color(0xFF1A1A1A),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "${meal.category} • ${meal.area}",
-                    style: const TextStyle(
-                      color: Colors.red, 
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "${meal.category} • ${meal.area}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -182,15 +225,57 @@ class FavoritesScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.favorite_outline, size: 80, color: Colors.red[50]),
-          const SizedBox(height: 16),
-          const Text(
-            "No favorites yet", 
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+              ),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.favorite_border, size: 50, color: Colors.white),
           ),
+          const SizedBox(height: 24),
           const Text(
-            "Recipes you heart will appear here.", 
-            style: TextStyle(color: Colors.grey)
+            "❤️ No Favorites Yet",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1A1A1A),
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            "Your saved recipes will appear here.",
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xFF999999),
+            ),
+          ),
+          const SizedBox(height: 32),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF667EEA).withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Text(
+              "🍽️ Start Exploring",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),

@@ -31,75 +31,95 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     final categoriesAsync = ref.watch(categoriesProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8F9FF),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header and Search
+            // Header
             Padding(
-              padding: const EdgeInsets.all(20).copyWith(bottom: 16),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Explore",
+                    "🔍 Explore",
                     style: TextStyle(
                       fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF1A1A1A),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  // Categories
-                  categoriesAsync.when(
-                    data: (categories) {
-                      final categoryList = [allCategoryName, ...categories.map((c) => c.category)];
-                      return SizedBox(
-                        height: 40,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categoryList.length,
-                          itemBuilder: (context, index) {
-                            final isSelected = selectedCategoryIndex == index;
-                            return GestureDetector(
-                              onTap: () => _selectCategory(index),
-                              child: Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? const Color(0xFFEF4444) : Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: isSelected ? null : Border.all(color: Colors.grey.shade300),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    categoryList[index],
-                                    style: TextStyle(
-                                      color: isSelected ? Colors.white : Colors.black,
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    loading: () => const SizedBox(
-                      height: 40,
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                    error: (err, _) => const SizedBox(
-                      height: 40,
-                      child: Text("Failed to load categories", style: TextStyle(color: Colors.black)),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Browse all recipes",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF666666),
                     ),
                   ),
                 ],
               ),
             ),
+
+            // Categories
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: categoriesAsync.when(
+                data: (categories) {
+                  final categoryList = [allCategoryName, ...categories.map((c) => c.category)];
+                  return SizedBox(
+                    height: 44,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categoryList.length,
+                      itemBuilder: (context, index) {
+                        final isSelected = selectedCategoryIndex == index;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: GestureDetector(
+                            onTap: () => _selectCategory(index),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                gradient: isSelected
+                                    ? const LinearGradient(
+                                        colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                                      )
+                                    : null,
+                                color: isSelected ? null : const Color(0xFFE8E8F0),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  categoryList[index],
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: isSelected ? Colors.white : const Color(0xFF666666),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                loading: () => const SizedBox(
+                  height: 44,
+                  child: Center(
+                    child: CircularProgressIndicator(color: Color(0xFF667EEA)),
+                  ),
+                ),
+                error: (err, _) => const SizedBox(
+                  height: 44,
+                  child: Text("Failed to load categories", style: TextStyle(color: Color(0xFF1A1A1A))),
+                ),
+              ),
+            ),
+
             // Meals List
             Expanded(
               child: mealsAsync.when(
@@ -123,7 +143,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     return const Center(
                       child: Text(
                         "No recipes found",
-                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                        style: TextStyle(color: Color(0xFF999999), fontSize: 16),
                       ),
                     );
                   }
@@ -136,11 +156,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     },
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(color: Color(0xFF667EEA)),
+                ),
                 error: (err, _) => Center(
                   child: Text(
                     "Error loading meals: $err",
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Color(0xFF1A1A1A)),
                   ),
                 ),
               ),
@@ -163,12 +185,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: const Color(0xFF667EEA).withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -177,26 +199,26 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             // Image
             ClipRRect(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                bottomLeft: Radius.circular(12),
+                topLeft: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
               ),
               child: Image.network(
                 meal.image ?? '',
-                width: 100,
-                height: 100,
+                width: 110,
+                height: 110,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.grey[200],
-                  child: const Icon(Icons.fastfood, color: Colors.grey),
+                  width: 110,
+                  height: 110,
+                  color: const Color(0xFFE8E8F0),
+                  child: const Icon(Icons.fastfood, color: Colors.grey, size: 32),
                 ),
               ),
             ),
             // Content
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -205,19 +227,26 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       meal.name ?? 'Unnamed',
                       style: const TextStyle(
                         fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF1A1A1A),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      meal.category ?? 'General',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF667EEA).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        meal.category ?? 'General',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF667EEA),
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
@@ -225,8 +254,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey[400]),
+              padding: const EdgeInsets.only(right: 16),
+              child: Icon(Icons.arrow_forward_ios, size: 14, color: const Color(0xFFDDDDDD)),
             ),
           ],
         ),

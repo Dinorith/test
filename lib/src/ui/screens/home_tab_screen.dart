@@ -20,7 +20,7 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
     final randomMealAsync = ref.watch(randomMealProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white, // Clean white background
+      backgroundColor: const Color(0xFFF8F9FF),
       body: SafeArea(
         child: mealsAsync.when(
           data: (meals) {
@@ -28,63 +28,67 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
 
             return CustomScrollView(
               slivers: [
-                // Header with Discover
+                // Header
                 const SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                    child: Text(
-                      "Discover",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      "Find your next favorite meal",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Suggested For You - Large Featured Card
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Suggested For You",
+                        Text(
+                          "🍽️ Discover",
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF1A1A1A),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 4),
+                        Text(
+                          "Explore amazing recipes",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF666666),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Random Suggestion - Premium Card
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: Text(
+                            "⭐ Try This",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1A1A1A),
+                            ),
+                          ),
+                        ),
                         randomMealAsync.when(
                           data: (randomMeal) {
                             if (randomMeal == null) return const SizedBox();
-                            return _buildFeaturedCard(context, randomMeal);
+                            return _buildPremiumCard(context, randomMeal);
                           },
                           loading: () => Container(
-                            height: 280,
+                            height: 200,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
                             ),
                             child: const Center(
-                              child: CircularProgressIndicator(color: Colors.red),
+                              child: CircularProgressIndicator(
+                                color: Color(0xFF667EEA),
+                              ),
                             ),
                           ),
                           error: (_, __) => const SizedBox(),
@@ -94,47 +98,47 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                   ),
                 ),
 
-                // Popular Section
+                // Popular Grid
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Popular Now",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: Text(
+                            "🔥 Trending",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1A1A1A),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 16),
                         popularMealsAsync.when(
                           data: (popularMeals) {
-                            return SizedBox(
-                              height: 220,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: popularMeals.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                      right: index == popularMeals.length - 1 ? 0 : 16,
-                                    ),
-                                    child: _buildPopularCard(
-                                      context,
-                                      popularMeals[index],
-                                    ),
-                                  );
-                                },
+                            return GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.75,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
                               ),
+                              itemCount: popularMeals.length,
+                              itemBuilder: (context, index) {
+                                return _buildGridCard(context, popularMeals[index]);
+                              },
                             );
                           },
                           loading: () => const SizedBox(
-                            height: 220,
+                            height: 200,
                             child: Center(
-                              child: CircularProgressIndicator(color: Colors.red),
+                              child: CircularProgressIndicator(
+                                color: Color(0xFF667EEA),
+                              ),
                             ),
                           ),
                           error: (_, __) => const SizedBox(),
@@ -148,14 +152,21 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
               ],
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator(color: Colors.red)),
-          error: (err, _) => Center(child: Text("Error: $err")),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: Color(0xFF667EEA)),
+          ),
+          error: (err, _) => Center(
+            child: Text(
+              "Error: $err",
+              style: const TextStyle(color: Color(0xFF1A1A1A)),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildFeaturedCard(BuildContext context, Meal meal) {
+  Widget _buildPremiumCard(BuildContext context, Meal meal) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -164,122 +175,100 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
         );
       },
       child: Container(
-        height: 280,
+        height: 200,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.red.withOpacity(0.15),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              color: const Color(0xFF667EEA).withOpacity(0.15),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
         child: Stack(
           children: [
-            // Background Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(20),
               child: Image.network(
                 meal.image ?? '',
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
-                  color: Colors.grey[100],
+                  color: const Color(0xFFE8E8F0),
                   child: const Icon(Icons.fastfood, size: 40, color: Colors.grey),
                 ),
               ),
             ),
-            // Gradient Overlay
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(20),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.7),
+                    Colors.black.withOpacity(0.6),
                   ],
                 ),
               ),
             ),
-            // Content
             Positioned(
               bottom: 0,
               left: 0,
               right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
-                  ),
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.8),
-                    ],
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            meal.name ?? 'Unknown',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF667EEA).withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              meal.category ?? 'General',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        meal.category ?? 'General',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      meal.name ?? 'Unknown',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
                         color: Colors.white,
+                        shape: BoxShape.circle,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "20 min • Easy",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.9),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.favorite_rounded,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                        ),
-                      ],
+                      child: const Icon(
+                        Icons.favorite_rounded,
+                        color: Color(0xFF667EEA),
+                        size: 18,
+                      ),
                     ),
                   ],
                 ),
@@ -291,7 +280,7 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
     );
   }
 
-  Widget _buildPopularCard(BuildContext context, Meal meal) {
+  Widget _buildGridCard(BuildContext context, Meal meal) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -300,15 +289,14 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
         );
       },
       child: Container(
-        width: 160,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: const Color(0xFF667EEA).withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -320,22 +308,21 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
                   ),
                   child: Image.network(
                     meal.image ?? '',
-                    height: 130,
+                    height: 140,
                     width: double.infinity,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
-                      height: 130,
-                      color: Colors.grey[100],
-                      child: const Icon(Icons.fastfood, color: Colors.grey, size: 24),
+                      height: 140,
+                      color: const Color(0xFFE8E8F0),
+                      child: const Icon(Icons.fastfood, color: Colors.grey, size: 28),
                     ),
                   ),
                 ),
-                // Heart Button
                 Positioned(
                   top: 8,
                   right: 8,
@@ -347,20 +334,20 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
+                          blurRadius: 4,
                         ),
                       ],
                     ),
                     child: const Icon(
-                      Icons.favorite_rounded,
-                      color: Colors.red,
+                      Icons.favorite_border_rounded,
+                      color: Color(0xFF667EEA),
                       size: 16,
                     ),
                   ),
                 ),
               ],
             ),
-            // Text
+            // Info
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -369,42 +356,28 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                   Text(
                     meal.name ?? 'Unknown',
                     style: const TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black,
+                      color: Color(0xFF1A1A1A),
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xFFE8E8F0),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Text(
-                      meal.category ?? 'General',
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Colors.red,
+                    child: const Text(
+                      'Category',
+                      style: TextStyle(
+                        fontSize: 9,
+                        color: Color(0xFF667EEA),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.schedule, size: 12, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      const Text(
-                        "20 min",
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
