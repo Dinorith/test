@@ -31,7 +31,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     final categoriesAsync = ref.watch(categoriesProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FF),
+      backgroundColor: const Color(0xFF0F0F1E),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,19 +43,21 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "🔍 Explore",
+                    "🔍 Explore Recipes",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF1A1A1A),
+                      color: Color(0xFFFFD93D),
+                      letterSpacing: 0.5,
                     ),
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    "Browse all recipes",
+                    "Discover delicious dishes from around the world",
                     style: TextStyle(
                       fontSize: 13,
-                      color: Color(0xFF666666),
+                      color: Color(0xFFB0B0C0),
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -82,12 +84,11 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 16),
                               decoration: BoxDecoration(
-                                gradient: isSelected
-                                    ? const LinearGradient(
-                                        colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                                      )
-                                    : null,
-                                color: isSelected ? null : const Color(0xFFE8E8F0),
+                                color: isSelected ? const Color(0xFF1A1A2E) : const Color(0xFF1A1A2E),
+                                border: Border.all(
+                                  color: isSelected ? const Color(0xFFFFD93D) : const Color(0xFF2A2A3E),
+                                  width: isSelected ? 2 : 1,
+                                ),
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               child: Center(
@@ -95,8 +96,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                                   categoryList[index],
                                   style: TextStyle(
                                     fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: isSelected ? Colors.white : const Color(0xFF666666),
+                                    fontWeight: FontWeight.w700,
+                                    color: isSelected ? const Color(0xFFFFD93D) : const Color(0xFFB0B0C0),
                                   ),
                                 ),
                               ),
@@ -110,12 +111,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 loading: () => const SizedBox(
                   height: 44,
                   child: Center(
-                    child: CircularProgressIndicator(color: Color(0xFF667EEA)),
+                    child: CircularProgressIndicator(color: Color(0xFFFFD93D)),
                   ),
                 ),
                 error: (err, _) => const SizedBox(
                   height: 44,
-                  child: Text("Failed to load categories", style: TextStyle(color: Color(0xFF1A1A1A))),
+                  child: Text("Failed to load categories", style: TextStyle(color: Color(0xFFB0B0C0))),
                 ),
               ),
             ),
@@ -143,7 +144,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     return const Center(
                       child: Text(
                         "No recipes found",
-                        style: TextStyle(color: Color(0xFF999999), fontSize: 16),
+                        style: TextStyle(color: Color(0xFFB0B0C0), fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     );
                   }
@@ -157,12 +158,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                   );
                 },
                 loading: () => const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF667EEA)),
+                  child: CircularProgressIndicator(color: Color(0xFFFFD93D)),
                 ),
                 error: (err, _) => Center(
                   child: Text(
                     "Error loading meals: $err",
-                    style: const TextStyle(color: Color(0xFF1A1A1A)),
+                    style: const TextStyle(color: Color(0xFFB0B0C0)),
                   ),
                 ),
               ),
@@ -182,15 +183,19 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(bottom: 14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF1A1A2E),
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0xFF2A2A3E),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF667EEA).withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 3),
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -202,17 +207,35 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 topLeft: Radius.circular(16),
                 bottomLeft: Radius.circular(16),
               ),
-              child: Image.network(
-                meal.image ?? '',
-                width: 110,
-                height: 110,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  width: 110,
-                  height: 110,
-                  color: const Color(0xFFE8E8F0),
-                  child: const Icon(Icons.fastfood, color: Colors.grey, size: 32),
-                ),
+              child: Stack(
+                children: [
+                  Image.network(
+                    meal.image ?? '',
+                    width: 110,
+                    height: 110,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      width: 110,
+                      height: 110,
+                      color: const Color(0xFF0F0F1E),
+                      child: const Icon(Icons.fastfood, color: Color(0xFFFFD93D), size: 40),
+                    ),
+                  ),
+                  Container(
+                    width: 110,
+                    height: 110,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.4),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             // Content
@@ -227,25 +250,26 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       meal.name ?? 'Unnamed',
                       style: const TextStyle(
                         fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFFFFD93D),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 6),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF667EEA).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
+                        color: const Color(0xFF6BCB77).withOpacity(0.2),
+                        border: Border.all(color: const Color(0xFF6BCB77), width: 1),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         meal.category ?? 'General',
                         style: const TextStyle(
                           fontSize: 11,
-                          color: Color(0xFF667EEA),
-                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF6BCB77),
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -255,7 +279,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Icon(Icons.arrow_forward_ios, size: 14, color: const Color(0xFFDDDDDD)),
+              child: Icon(Icons.arrow_forward_ios, size: 14, color: const Color(0xFF2A2A3E)),
             ),
           ],
         ),

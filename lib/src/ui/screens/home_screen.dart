@@ -48,7 +48,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FF),
+      backgroundColor: const Color(0xFF0F0F1E),
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
@@ -56,15 +56,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF1A1A2E),
           border: Border(
-            top: BorderSide(color: const Color(0xFFE8E8F0), width: 1),
+            top: BorderSide(
+              color: const Color(0xFF2A2A3E),
+              width: 1,
+            ),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 12,
-              offset: const Offset(0, -2),
+              offset: const Offset(0, -4),
             ),
           ],
         ),
@@ -73,19 +76,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
           onTap: _onTabTapped,
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.transparent,
-          selectedItemColor: const Color(0xFF667EEA),
-          unselectedItemColor: const Color(0xFF999999),
+          selectedItemColor: const Color(0xFFFFD93D),
+          unselectedItemColor: const Color(0xFF666666),
           showUnselectedLabels: true,
           elevation: 0,
           selectedLabelStyle: const TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF667EEA),
+            fontWeight: FontWeight.w800,
+            color: Color(0xFFFFD93D),
           ),
           unselectedLabelStyle: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: Color(0xFF999999),
+            color: Color(0xFF666666),
           ),
           items: const [
             BottomNavigationBarItem(

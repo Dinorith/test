@@ -28,25 +28,18 @@ class MealDetailScreen extends ConsumerWidget {
     final isFav = favorites.any((e) => e.id.toString() == mealIdStr);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FF),
+      backgroundColor: const Color(0xFF0F0F1E),
       appBar: AppBar(
-        title: Text(meal.name ?? "Recipe", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
+        title: const Text("Recipe Details", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18)),
+        backgroundColor: const Color(0xFF1A1A2E),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         actions: [
           IconButton(
             icon: Icon(
               isFav ? Icons.favorite : Icons.favorite_border,
-              color: Colors.white,
+              color: const Color(0xFFFF6B6B),
+              size: 26,
             ),
             onPressed: () {
               mealDetailsAsync.whenData((data) => _toggleFavorite(ref, isFav, data, favorites));
@@ -55,12 +48,12 @@ class MealDetailScreen extends ConsumerWidget {
         ],
       ),
       body: mealDetailsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF667EEA))),
+        loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFFFD93D))),
         error: (e, _) => Center(
-          child: Text("Error loading details", style: TextStyle(color: Colors.grey[600])),
+          child: Text("Error loading details", style: TextStyle(color: Colors.grey[400])),
         ),
         data: (mealData) {
-          if (mealData.isEmpty) return const Center(child: Text("No details found."));
+          if (mealData.isEmpty) return const Center(child: Text("No details found.", style: TextStyle(color: Colors.white70)));
 
           final ingredients = (mealData['ingredients'] as List? ?? []);
 
@@ -68,26 +61,44 @@ class MealDetailScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Image with overlay
+                // Top Image with modern overlay
                 Stack(
                   children: [
                     Hero(
                       tag: "meal_${meal.idMeal}",
                       child: ClipRRect(
                         borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(24),
-                          bottomRight: Radius.circular(24),
+                          bottomLeft: Radius.circular(32),
+                          bottomRight: Radius.circular(32),
                         ),
-                        child: Image.network(
-                          meal.image ?? mealData['mealThumb'] ?? '',
-                          height: 300,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
-                            height: 300,
-                            color: const Color(0xFFE8E8F0),
-                            child: const Icon(Icons.fastfood, size: 60, color: Colors.grey),
-                          ),
+                        child: Stack(
+                          children: [
+                            Image.network(
+                              meal.image ?? mealData['mealThumb'] ?? '',
+                              height: 320,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                height: 320,
+                                color: const Color(0xFF1A1A2E),
+                                child: const Icon(Icons.fastfood, size: 80, color: Color(0xFFFFD93D)),
+                              ),
+                            ),
+                            // Overlay gradient
+                            Container(
+                              height: 320,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withOpacity(0.6),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -95,7 +106,7 @@ class MealDetailScreen extends ConsumerWidget {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -103,43 +114,47 @@ class MealDetailScreen extends ConsumerWidget {
                       Text(
                         mealData['meal'] ?? meal.name ?? '',
                         style: const TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFF1A1A1A),
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFFFFD93D),
+                          letterSpacing: 0.5,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Row(
+                      const SizedBox(height: 12),
+                      
+                      // Category and Area Tags
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                              ),
-                              borderRadius: BorderRadius.circular(12),
+                              color: const Color(0xFFFF6B6B).withOpacity(0.2),
+                              border: Border.all(color: const Color(0xFFFF6B6B), width: 1.5),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
-                              mealData['category'] ?? '',
+                              "🍽️ ${mealData['category'] ?? ''}",
                               style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
+                                color: Color(0xFFFF6B6B),
+                                fontWeight: FontWeight.w700,
                                 fontSize: 12,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 12),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE8E8F0),
-                              borderRadius: BorderRadius.circular(12),
+                              color: const Color(0xFF6BCB77).withOpacity(0.2),
+                              border: Border.all(color: const Color(0xFF6BCB77), width: 1.5),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
-                              mealData['area'] ?? '',
+                              "🌍 ${mealData['area'] ?? ''}",
                               style: const TextStyle(
-                                color: Color(0xFF667EEA),
-                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF6BCB77),
+                                fontWeight: FontWeight.w700,
                                 fontSize: 12,
                               ),
                             ),
@@ -147,94 +162,99 @@ class MealDetailScreen extends ConsumerWidget {
                         ],
                       ),
 
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 40),
 
-                      // INSTRUCTIONS
-                      _buildHeader("👨‍🍳 How to Prepare"),
+                      // INSTRUCTIONS SECTION
+                      _buildSectionHeader("👨‍🍳 Preparation Steps"),
                       const SizedBox(height: 16),
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF1A1A2E),
                           borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF667EEA).withOpacity(0.08),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                          border: Border.all(color: const Color(0xFFFFD93D).withOpacity(0.3), width: 1.5),
                         ),
                         child: Text(
                           mealData['instructions'] ?? '',
                           style: const TextStyle(
                             fontSize: 15,
-                            height: 1.8,
-                            color: Color(0xFF333333),
+                            height: 1.9,
+                            color: Color(0xFFE0E0E0),
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
 
                       const SizedBox(height: 40),
 
-                      // INGREDIENTS
-                      _buildHeader("🥗 Ingredients"),
+                      // INGREDIENTS SECTION
+                      _buildSectionHeader("🥘 What You Need"),
                       const SizedBox(height: 16),
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF1A1A2E),
                           borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF667EEA).withOpacity(0.08),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                          border: Border.all(color: const Color(0xFF6BCB77).withOpacity(0.3), width: 1.5),
                         ),
                         child: ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: ingredients.length,
-                          separatorBuilder: (_, __) => const Divider(
+                          separatorBuilder: (_, __) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
                             height: 1,
-                            indent: 16,
-                            endIndent: 16,
-                            color: Color(0xFFE8E8F0),
+                            color: const Color(0xFF2A2A3E),
                           ),
                           itemBuilder: (context, index) {
                             final ing = ingredients[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            final isEven = index.isEven;
+                            return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                              color: isEven ? const Color(0xFF0F0F1E) : const Color(0xFF1A1A2E),
                               child: Row(
                                 children: [
                                   Container(
-                                    width: 8,
-                                    height: 8,
+                                    width: 24,
+                                    height: 24,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      gradient: const LinearGradient(
-                                        colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                                      color: const Color(0xFF6BCB77).withOpacity(0.3),
+                                      border: Border.all(color: const Color(0xFF6BCB77), width: 1.5),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        "✓",
+                                        style: TextStyle(
+                                          color: Color(0xFF6BCB77),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
+                                  const SizedBox(width: 16),
                                   Expanded(
-                                    child: Text(
-                                      ing['ingredient'] ?? '',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xFF1A1A1A),
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    ing['measure'] ?? '',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF667EEA),
-                                      fontSize: 13,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          ing['ingredient'] ?? '',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFFFFD93D),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          ing['measure'] ?? 'As needed',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xFFB0B0C0),
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -255,14 +275,14 @@ class MealDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(String title) {
+  Widget _buildSectionHeader(String title) {
     return Text(
       title,
       style: const TextStyle(
         fontSize: 18,
-        fontWeight: FontWeight.w700,
-        color: Color(0xFF1A1A1A),
-        letterSpacing: 0.5,
+        fontWeight: FontWeight.w800,
+        color: Color(0xFFFFD93D),
+        letterSpacing: 0.8,
       ),
     );
   }
