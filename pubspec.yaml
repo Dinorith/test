@@ -1,0 +1,56 @@
+name: recipe_app
+description: "A new Flutter project."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State Management
+  flutter_riverpod: ^2.5.0
+
+  # Networking
+  dio: ^5.4.0
+
+  # JSON Serialization
+  json_annotation: ^4.9.0
+
+  # Local Database (Room-like)
+  floor: ^1.4.0
+  sqflite: ^2.3.0
+
+  # Onboarding Screens
+  introduction_screen: ^3.1.8
+
+  # Local Storage
+  shared_preferences: ^2.3.0
+
+  # Image Caching
+  cached_network_image: ^3.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+  # Code Generators
+  build_runner: any
+  json_serializable: ^6.6.0
+  floor_generator: ^1.4.0
+
+flutter:
+  uses-material-design: true
+  assets:
+      - assets/pic1.jpg
+      - assets/pic2.jpg
+
+
+
