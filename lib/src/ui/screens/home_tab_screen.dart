@@ -20,11 +20,11 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
     final randomMealAsync = ref.watch(randomMealProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FF),
+      backgroundColor: const Color(0xFF0F0F1E),
       body: SafeArea(
         child: mealsAsync.when(
           data: (meals) {
-            if (meals.isEmpty) return const Center(child: Text("No meals found"));
+            if (meals.isEmpty) return const Center(child: Text("No meals found", style: TextStyle(color: Color(0xFFB0B0C0))));
 
             return CustomScrollView(
               slivers: [
@@ -40,7 +40,8 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF1A1A1A),
+                            color: Color(0xFFFFD93D),
+                            letterSpacing: 0.5,
                           ),
                         ),
                         SizedBox(height: 4),
@@ -48,7 +49,8 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                           "Explore amazing recipes",
                           style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF666666),
+                            color: Color(0xFFB0B0C0),
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -69,8 +71,9 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                             "⭐ Try This",
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFFFD93D),
+                              letterSpacing: 0.3,
                             ),
                           ),
                         ),
@@ -83,11 +86,11 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                             height: 200,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
+                              color: const Color(0xFF1A1A2E),
                             ),
                             child: const Center(
                               child: CircularProgressIndicator(
-                                color: Color(0xFF667EEA),
+                                color: Color(0xFFFFD93D),
                               ),
                             ),
                           ),
@@ -111,8 +114,9 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                             "🔥 Trending",
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFFFD93D),
+                              letterSpacing: 0.3,
                             ),
                           ),
                         ),
@@ -137,7 +141,7 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                             height: 200,
                             child: Center(
                               child: CircularProgressIndicator(
-                                color: Color(0xFF667EEA),
+                                color: Color(0xFFFFD93D),
                               ),
                             ),
                           ),
@@ -153,12 +157,12 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
             );
           },
           loading: () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFF667EEA)),
+            child: CircularProgressIndicator(color: Color(0xFFFFD93D)),
           ),
           error: (err, _) => Center(
             child: Text(
               "Error: $err",
-              style: const TextStyle(color: Color(0xFF1A1A1A)),
+              style: const TextStyle(color: Color(0xFFB0B0C0)),
             ),
           ),
         ),
@@ -180,7 +184,7 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF667EEA).withOpacity(0.15),
+              color: Colors.black.withOpacity(0.4),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -196,8 +200,8 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                 height: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
-                  color: const Color(0xFFE8E8F0),
-                  child: const Icon(Icons.fastfood, size: 40, color: Colors.grey),
+                  color: const Color(0xFF1A1A2E),
+                  child: const Icon(Icons.fastfood, size: 40, color: Color(0xFFFFD93D)),
                 ),
               ),
             ),
@@ -209,7 +213,7 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.6),
+                    Colors.black.withOpacity(0.8),
                   ],
                 ),
               ),
@@ -233,8 +237,8 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                             meal.name ?? 'Unknown',
                             style: const TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFFFD93D),
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -243,14 +247,14 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF667EEA).withOpacity(0.9),
+                              color: const Color(0xFF6BCB77).withOpacity(0.9),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
                               meal.category ?? 'General',
                               style: const TextStyle(
                                 fontSize: 11,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                                 color: Colors.white,
                               ),
                             ),
@@ -263,10 +267,11 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
+                        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 4)],
                       ),
                       child: const Icon(
                         Icons.favorite_rounded,
-                        color: Color(0xFF667EEA),
+                        color: Color(0xFFFF6B6B),
                         size: 18,
                       ),
                     ),
@@ -291,12 +296,13 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: Colors.white,
+          color: const Color(0xFF1A1A2E),
+          border: Border.all(color: const Color(0xFF2A2A3E), width: 1),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF667EEA).withOpacity(0.08),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 8,
-              offset: const Offset(0, 2),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -311,16 +317,30 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
                   ),
-                  child: Image.network(
-                    meal.image ?? '',
-                    height: 140,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      height: 140,
-                      color: const Color(0xFFE8E8F0),
-                      child: const Icon(Icons.fastfood, color: Colors.grey, size: 28),
-                    ),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        meal.image ?? '',
+                        height: 140,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          height: 140,
+                          color: const Color(0xFF0F0F1E),
+                          child: const Icon(Icons.fastfood, color: Color(0xFFFFD93D), size: 32),
+                        ),
+                      ),
+                      Container(
+                        height: 140,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Positioned(
@@ -333,14 +353,14 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withOpacity(0.2),
                           blurRadius: 4,
                         ),
                       ],
                     ),
                     child: const Icon(
                       Icons.favorite_border_rounded,
-                      color: Color(0xFF667EEA),
+                      color: Color(0xFFFF6B6B),
                       size: 16,
                     ),
                   ),
@@ -357,25 +377,26 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
                     meal.name ?? 'Unknown',
                     style: const TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFFFD93D),
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8E8F0),
+                      color: const Color(0xFF6BCB77).withOpacity(0.2),
+                      border: Border.all(color: const Color(0xFF6BCB77), width: 1),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text(
-                      'Category',
-                      style: TextStyle(
+                    child: Text(
+                      meal.category ?? 'General',
+                      style: const TextStyle(
                         fontSize: 9,
-                        color: Color(0xFF667EEA),
-                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF6BCB77),
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
